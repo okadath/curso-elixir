@@ -1,1 +1,1 @@
-aprendiendoa  programar en elixir
+aprendiendo a  programar en elixir
