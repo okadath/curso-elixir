@@ -50,5 +50,7 @@ end
 #la programacion funcional hace pattern matching
 #permite "forzar" valores para completar la sentencia
 
-
+:math.sin 0
+:math.pow 2,17
+i "hello"
 
