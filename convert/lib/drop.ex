@@ -11,4 +11,13 @@ mierdosa documentacion :v
     def fall_velocity(distance, gravity\\ 9.8) do
         :math.sqrt(2 * gravity * distance)
     end
+    
+    defmodule MathDemo do
+        def absolute_value(number) when number < 0 do
+        -number
+    end
+    def absolute_value(number) do
+        number
+    end
+    end
 end
