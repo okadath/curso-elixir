@@ -65,3 +65,10 @@ fall_velocity= fn (distance) -> :math.sqrt(2 * 9.8 * distance) end
 #si hay cambios dsde iex :
 #recompile
 
+
+#tuplas
+tuple={:earth,20}
+elem(tuple,1)
+new_tuple=put_elem(tuple,1,40)
+tuple_size(new_tuple)
+
