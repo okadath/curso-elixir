@@ -53,4 +53,15 @@ end
 :math.sin 0
 :math.pow 2,17
 i "hello"
+#metodos privados defp
+#anon func 
+fall_velocity= fn (distance) -> :math.sqrt(2 * 9.8 * distance) end
+#nuevo proyecto
+#mix new first_app
+#abrir cosola
+#iex -S mix
+#nuevo modulo 
+#mix new direccion --app modulo
+#si hay cambios dsde iex :
+#recompile
 
