@@ -72,3 +72,4 @@ elem(tuple,1)
 new_tuple=put_elem(tuple,1,40)
 tuple_size(new_tuple)
 
+#no se si iniciar mi tarea con este lenguaje
