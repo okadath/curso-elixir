@@ -57,13 +57,13 @@ i "hello"
 #anon func 
 fall_velocity= fn (distance) -> :math.sqrt(2 * 9.8 * distance) end
 #nuevo proyecto
-#mix new first_app
+    #mix new first_app
 #abrir cosola
-#iex -S mix
+    #iex -S mix
 #nuevo modulo 
-#mix new direccion --app modulo
+    #mix new direccion --app modulo
 #si hay cambios dsde iex :
-#recompile
+    #recompile
 
 
 #tuplas
@@ -73,3 +73,44 @@ new_tuple=put_elem(tuple,1,40)
 tuple_size(new_tuple)
 
 #no se si iniciar mi tarea con este lenguaje
+
+#https://elixirforum.com/t/how-to-make-a-chat-app-like-whatsapp/5757/20
+#
+
+
+
+#n="dos"
+#result ="asd"
+#IO.puts("#{n} yields #{result}.")
+#y = {4, 5, 6}
+#"y is now #{inspect y}"
+#multi = """
+#This is a multiline
+#string, also called a heredoc.
+#"""
+# caracteres son mas lentos que strings 
+#'el' ++ 'ixir'
+#List.to_string('elixir')
+#String.to_char_list("elixir")
+
+#sigilos
+#~ (tilde)
+#s (,binary string)
+#c (character list)
+#r (regular expression)
+#w (lista de palabras usando espacios).
+#lowercase,  interpolation y escaping usual.
+#uppercase (S, C, R, or W), como se ve no escaping o interpolation.
+#p = ~S"es {#msg} \n solo un {#msg}."
+
+
+
+
+
+
+
+
+
+
+
+
