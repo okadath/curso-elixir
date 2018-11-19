@@ -15,12 +15,41 @@ end
 #en un modulo 
 
 defmodule Bounce do
-#este metodo sera llamado
-    def report do
+#este metodo sera llamado    
+    def report(count) do
         receive do
-            msg -> IO.puts("Received #{msg}")
-            #lamada recursiva para que se repita el loop
-            report()
+            msg -> IO.puts("Received #{count}: #{msg}")
+            #si hay recursion de preferencia que sea tail recursive
+            report(count + 1)
+            #after (?) para terminar bajo condiciones
         end
     end
+    
+    def report2(count) do
+        new_count = receive do
+            msg -> IO.puts("Received #{count}: #{msg}")
+            count + 1#aqui se iguala new count a count+1
+        end
+        report2(new_count)
+    end
+    
 end
+
+pid2 = spawn(Bounce, :report, [1])
+send(pid2, 23)
+send(pid2, :message)
+
+pid3 = spawn(Bounce, :report2, [4])
+send(pid3, 2124)
+send(pid3, :asd)
+
+
+
+
+
+
+
+
+
+
+
