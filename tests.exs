@@ -299,60 +299,92 @@ Map.put_new(planemo_map, :jupiter, 23.1)
 #machear con una key, si no existe hay error
 %{earth: earth_gravity} = planemo_map
 
+#functions=====================
+fall_velocity = fn(distance) -> :math.sqrt(2 * 9.8 * distance) end
+#se evalua con un punto
+IO.puts fall_velocity.(20)
 
-#structs
 
-defprotocol Valid do
-@doc "Returns true if data is considered nominally valid"
-	def valid?(data)
+#funciones que reciben funciones(devuelve el triple de f)
+defmodule Hof do
+    def tripler(value, function) do
+    3 * function.(value)
+    end
 end
 
-defmodule Planemo do
-	defstruct name: :nil, 
-	gravity: 0, diameter: 0, distance_from_sun: 0
+#se puede crear como parametro
+#Hof.tripler(6, fn(value) -> 20 * value end)
+
+#funciones ampersand, se define el arg_n con &
+ampersand_function = &(20 * &1)
+#Hof.tripler(:math.pi, &:math.cos(&1))
+
+#funciones con listas !!!
+#se le pasa al enum(lista, funcion) y la funcion(i) lo hace uno por uno
+print = fn(value) -> IO.puts(" #{value}") end
+list = [1, 2, 4, 8, 16, 32]
+Enum.each(list, print)
 
 
-end
+square = &(&1 * &1)
+IO.inspect Enum.map(list, square)
+#las lists tambien pueden ser por # arreglo al vuelo
+Enum.map(1..3, square)
 
-defimpl Valid, for: Planemo do
-	def valid?(p) do
-		p.gravity >= 0 and p.diameter >= 0 and
-		p.distance_from_sun >= 0
-	end
-end
+#compresion de listas 
+for value <- list, do: value * value
 
-defmodule Tower do
-	defstruct location: "", 
-	height: 20, planemo: :earth, name: ""
-end
-
-tower5 = %Tower{planemo: :mars, height: 500, 
-name: "Daga Vallis", location: "Valles Marineris"}
-tower5.name
-%Tower{planemo: p, location: where} = tower5
+#filtrado de funciones
+#creamos un filtro a partir de condiciones booleanas
+four_bits = fn(value) -> (value >= 0) and (value < 16) end
+#y se lo pasamos a Enum.filter, este crea un nuevo arreglo∫
+Enum.filter(list, four_bits)
+#tambien se puede hacer con compresion
+asd2=for value <- list, value >= 0, value < 16, do: value
 
 
-defmodule StructDrop do
-	#pasar un struct a una funcion, lo demas es como otras funciones
-	# def fall_velocity(t = %Tower{}) do
-	# fall_velocity(t.planemo, t.height)
-	# end
-	#lee los valores directamente del struct
-	def fall_velocity(%Tower{planemo: planemo, height: distance}) do
-		fall_velocity(planemo, distance)
-	end
-	def fall_velocity(:earth, distance) when distance >= 0 do
-		:math.sqrt(2 * 9.8 * distance)
-	end
-	def fall_velocity(:moon, distance) when distance >= 0 do
-		:math.sqrt(2 * 1.6 * distance)
-	end
-	def fall_velocity(:mars, distance) when distance >= 0 do
-		:math.sqrt(2 * 3.71 * distance)
-	end
-end
+#testing de elementos
+#funcion booleana
+int? = fn(value) -> is_integer(value) end
+#preguntamos si todos cumplen la funcion
 
-StructDrop.fall_velocity(tower5)
+Enum.all?(list, int?)
+#si por lo menos alguno cumple
+Enum.any?(list, int?)
+
+#tambien cn &..... f(x)=x>10
+greater_than_ten? = &(&1 > 10)
+
+Enum.all?(list, greater_than_ten?)
+
+Enum.any?(list, greater_than_ten?)
+
+#particionado de listas, tomamos una funcion ylas separa si cumple o no
+IO.inspect Enum.partition(list, greater_than_ten?)
+#para partir a partir de un elemento dado
+test = &(&1 < 4)
+#parte y devuelve despues de partir
+Enum.drop_while([1, 2, 4, 8, 4, 2, 1], test)
+#parte y devuelve antes de partir
+Enum.take_while([1, 2, 4, 8, 4, 2, 1], test)
+
+
+#Folding lists
+#se puede usar un acumulador para almacenar algun resultado en funcion de las listas
+
+sumsq = fn(value, accumulator) -> accumulator + value * value end
+#foldl y foldr son lo mismo l es tail recursive
+#foldl es de head->tail
+#foldr es de tail->head
+#l es mas rapido ya que no invierte la lista, pero si 
+#el orden no importa da igual el que usemos
+List.foldl([2, 4, 6], 0, sumsq)
+
+#cuando si importa su orden se obtienen resultados distintos!!!!!
+
+
+
+
 
 
 
