@@ -43,13 +43,22 @@ pid3 = spawn(Bounce, :report2, [4])
 send(pid3, 2124)
 send(pid3, :asd)
 
+pid1 = spawn(Bounce, :report, [1])
+#registra un proceso
+Process.register(pid1, :bounce)
+send(:bounce, "Really?")
 
 
-
-
-
-
-
+get_bounce = Process.whereis(:bounce)
+Process.registered
+#existe pero sin registro
+Process.unregister(:bounce)
+#checamos si ya no esta
+test_bounce = Process.whereis(:bounce)
+#aun existe como variable global pero sin registro
+#ya no se puede acceder por atomo
+#hay que reregistrar
+send(get_bounce, "Still there?")
 
 
 
