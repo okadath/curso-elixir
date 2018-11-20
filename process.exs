@@ -82,13 +82,21 @@ Process.register(pid4, :Test_error)
 IO.inspect Process.registered
 send(pid4, 7)
 send(pid4, :seven)
-#a partir del error anterior truena pero aun esta en lista 
-#ya no funciona pero sigue enlistado y otros si funcionan
+#a partir del error puede ser invocado pero como metodo no
+#como proceso, no existe en el observer, hay que spawnearlo
 send(pid4, 14)
 send(pid3, 123)
 IO.inspect Process.registered
 
 #==================================================
+
+
+
+
+
+
+
+
 defmodule Drop do
 
     def drop do
@@ -118,8 +126,12 @@ end
 defmodule MphDrop do
     def mph_drop do
         IO.puts " Mph_drop.mph_drop:almaceno el PID de drop y lo envio a MphDrop.convert"
+        #si se manda una bandera de error la atrapa y envia mensaje a todos
+        #los linkeados(creo)
+        Process.flag(:trap_exit, true)
         #obtiene la direccion del proceso con el que trabajara
-        drop_pid = spawn(Drop, :drop, [])
+        #spawn_link es para eliminar todos los que se invocan junto con el
+        drop_pid = spawn_link(Drop, :drop, [])
         convert(drop_pid)
     end
 
@@ -132,22 +144,66 @@ defmodule MphDrop do
             IO.puts "Convert/2;recibi 2 valores, envio 3 a drop_pid, que enlaza a :drop, le mando mi PID, plan y dist"
             send(drop_pid, {self(), planemo, distance})
             convert(drop_pid)
+
+        #captura los mensajes de error
+        #este solo atrapa errores
+        #debe ir antes si es aridad/3 para cachearlo bien
+        # {:EXIT, pid, reason} ->
+        #     IO.puts("Failure: #{inspect(pid)} #{inspect(reason)}")
+
+        #este reconecta con el proceso que lo creo de un envio
+        #con error, elimina lo equivocado y crea uno nuevo 
+        #este posee las definiciones de inicializacion del Process.flag
+        #por que es el primer prceso creado, no pierde su PID padre
+        #pero es un nuevo proceso 
+        {:EXIT, _pid, _reason} ->
+            new_drop_pid = spawn_link(Drop, :drop, [])
+            convert(new_drop_pid)
+
         {planemo, distance, velocity} ->
             IO.puts "Convert/3:recibi 3 valores"
             mph_velocity = 2.23693629 * velocity
             IO.write("On #{planemo}, a fall of #{distance} meters ")
             IO.puts("yields a velocity of #{mph_velocity} mph.")
             convert(drop_pid)
+
         end
     end
 
 end
+
+
+
+
+
+
+
+
+
 
 IO.puts "agrego a :mph_drop para iniciar todo"
 pid1 = spawn(MphDrop, :mph_drop, [])
 IO.puts "despues mando manualmente un mensaje a mph_drop con 2 datos"
 send(pid1, {:earth, 20})
 
+#elimina el proceso y todas sus dependencias
+Process.exit(pid1,:kill) 
+#si se llama varias veces un proceso con spawn este genera diferentes PID
+#se debe dar kill cn su identificador, no se como reobtener los anteriores 
+
+
+#asi testeamos los errores
+pid1 = spawn(MphDrop, :mph_drop, [])
+#iniciamos el observador
+:observer.start()
+send(pid1, {:moon, 20})
+#forzamos error
+send(pid1, {:mars, :zoids})
+
+##++++++++++++++++++
+Process.unlink/1#remover linl
+Process.exit/2#terminar con su pid y especificando razon
+Process.monitor/1 #establecer conexion solo viendo el proceso 
 
 
 
