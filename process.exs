@@ -205,5 +205,5 @@ Process.unlink/1#remover linl
 Process.exit/2#terminar con su pid y especificando razon
 Process.monitor/1 #establecer conexion solo viendo el proceso 
 
-
+#:observer.start
 
