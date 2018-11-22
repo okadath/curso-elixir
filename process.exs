@@ -198,12 +198,12 @@ pid1 = spawn(MphDrop, :mph_drop, [])
 :observer.start()
 send(pid1, {:moon, 20})
 #forzamos error
-send(pid1, {:mars, :zoids})
+# send(pid1, {:mars, :zoids})
 
 ##++++++++++++++++++
-Process.unlink/1#remover linl
-Process.exit/2#terminar con su pid y especificando razon
-Process.monitor/1 #establecer conexion solo viendo el proceso 
+# Process.unlink/1#remover linl
+# Process.exit/2#terminar con su pid y especificando razon
+# Process.monitor/1 #establecer conexion solo viendo el proceso 
 
 #:observer.start
 
