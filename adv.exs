@@ -1,5 +1,4 @@
-
-
+#errores encerrados en un catch
 #try catch
 # try do
 # 	:math.sqrt(2 * gravity * distance)
@@ -66,7 +65,7 @@ Fact.factorial(4)
 # :dbg.stop/0 #reinicia
 # :dbg.stop_clear/0 #inicia desde un pu
 
-#Analisis estatico ===================
+#++++++++++++++++++++++++++++++++++++Analisis y tests ===================
 # Dyalixir 
 # instalar:
 
@@ -94,6 +93,8 @@ Fact.factorial(4)
 
 
 #definir test unitarios en la carpeta test de cada proyecto
+#esto inicializa el modulo de test unitarios en iex 
+ExUnit.start()
 
 defmodule DropTest do
 	#usa la libreria de tests, async permite ejecutarlos en paralelo
@@ -163,22 +164,70 @@ end
 #assert_in_delta calculated, 4.4, 0.05, "#{calculated} is not within 0.05 of 4.4"
 
 
+#podemos definir los tests unitarios en la documentacion, estos son doctests
+
+# defmodule DropTest2 do
+# 	use ExUnit.Case, async: true
+# 	#debe ser el nombre del modulo
+# 	doctest Drop
+# end
+# asi lucen, habra que revisarlos, no los entiendo del todo
+# @doc """
+# Calculates speed of a falling object on a given planemo
+# (planetary mass object)
+# iex(1)> Drop.fall_velocity(:earth, 10)
+# 14.0
+# iex(2)> Drop.fall_velocity(:mars, 20)
+# 12.181953866272849
+# iex> Drop.fall_velocity(:jupiter, 10)
+# ** (CaseClauseError) no case clause matching: :jupiter
+# """
 
 
+#===============================storing data
+
+#los records son como tuplas par aalmacenar datos
+#se pueden almacenar en su propio archivo .ex
+
+defmodule Planemo do
+	require Record
+		Record.defrecord :planemo, [name: :nil, gravity: 0, diameter: 0,
+		distance_from_sun: 0]
+	end
+defmodule Tower do
+	require Record
+	#nombre y etiqueta
+	Record.defrecord :tower, Tower,
+	[location: "", height: 20, planemo: :earth, name: ""]
+end
+
+#hay que escribir en la consola: require Tower
+# tower5 = Tower.tower planemo: :mars, height: 500,
+# name: "Daga Vallis", location: "Valles Marineris"
+#Tower.tower(tower5, :planemo)
+
+#o puedes usar el import
+
+# import Tower; tower(tower5, :height)
 
 
+#se definen 3 macheos cn require
+
+#completo
+# def fall_velocity(t = Tower.tower()) do
+# fall_velocity(Tower.tower(t, :planemo), Tower.tower(t, :height))
+
+#por partes
+# def fall_velocity(Tower.tower(planemo: planemo, height: distance)) do
+
+#por componentes individuales
+# def fall_velocity(t = tower(planemo: planemo, height: distance)) do
+# IO.puts("From #{tower(t, :name)}'s elevation" <>
+# "of #{distance} meters on #{planemo},")
 
 
-
-
-
-
-
-
-
-
-
-
+#los records se necesitan para la base de datos :O 
+#al parecer viene integrada, no se si phoenix use esa misma, si es asi...:O!
 
 
 
