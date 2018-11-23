@@ -385,6 +385,15 @@ List.foldl([2, 4, 6], 0, sumsq)
 
 
 
+#instalar
+#mix archive.install https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez
+#
+#ejecutar sin base de datos
+#mix phoenix.new fall --no-brunch --no-ecto
+#
+#correr desde iex
+#cd fall
+#iex -S mix phoenix.server
 
 
 
