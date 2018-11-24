@@ -43,10 +43,92 @@ con el contenido de la plantilla en html
 
 <h1>Test :v</h1>
 
+#=======================================
+agregando dinamismo
+
+<%= modifica el html <% no lo modifica
+
+luego modificamos la pagina
+
+<h1>Falling starts now!</h1>
+
+@conn conexion a dnd mandara la info entre plantillas y controllers
+fall_path proporciona info para mandar del form al server
+faller es el controller que lo manejara, pero las vistas tienen el mismo nombre
+[as: :calculation] pasa la info en un mapa de ese nombre
+fn f ->  es para pasar la info a los demas elementos del form
+@choices @es un asign, una variable que viene del controlador
+
+<%= form_for @conn, fall_path(@conn, :faller), [as: :calculation],
+fn f -> %>
+<%= select f, :planemo, @choices %>
+<%= text_input f, :distance %>
+<%= submit "Calculate" %>
+<% end %>
+
+agregamos su ruta y funcionara con el mismo controlador
+get "/fall", FallController, :faller
+post "/fall", FallController, :faller
 
 
+me parece que choises es un paso de parametros a renderizar...?
 
+agregamos metodo faller en controlador /controllers/fall_controller:
 
+#esto es solo para el despliegue
+#para agregar mas dinamismo hay que agregar metodos que manejen datos
+def faller(conn, params) do
+	choices = ["Earth": 1, "Moon": 2, "Mars": 3]
+	speed = 0
+	render conn, "faller.html", speed: speed, choices: choices
+end
 
+creamos templates/fall/faller.html.eex:
 
+<h1>Speed at impact was <%= @speed %> m/s.</h1>
+<p>Fall again?</p>
+<%= form_for @conn, fall_path(@conn, :faller), [as: :calculation],
+fn f -> %>
+<%= select f, :planemo, @choices %>
+<%= text_input f, :distance %>
+<%= submit "Calculate" %>
+<% end %>
+
+y esto ya deberia desplegar sin interactuar
+
+par agregar dinamismo modificamos su controlador reescribimos el metodo faller
+
+def faller(conn, %{"calculation" => %{
+		"planemo" => planemo,"distance" => distance}}) do
+		#calculation pasa todo como numero, hay que castearlo
+		#como lo lee de una lista esta asigno los numeros y 
+		#por ello los casos de fall velocity
+
+		calc_planemo = String.to_integer(planemo)
+		calc_distance = String.to_integer(distance)
+		speed = fall_velocity(calc_planemo, calc_distance)
+		choices = ["Earth": 1, "Moon": 2, "Mars": 3]
+		render conn, "faller.html", speed: speed, choices: choices
+	end
+
+	def fall_velocity(1, distance) do
+		:math.sqrt(2 * 9.8 * distance)
+	end
+
+	def fall_velocity(2, distance) do
+		:math.sqrt(2 * 1.6 * distance)
+	end
+
+	def fall_velocity(3, distance) do
+		:math.sqrt(2 * 3.71 * distance)
+	end
+	#este se agrega debajo por el patternmatching
+	def faller(conn, params) do
+	choices = ["Earth": 1, "Moon": 2, "Mars": 3]
+	speed = 0
+	render conn, "faller.html", speed: speed, choices: choices
+	end
+
+y esto ya permite el despliegue de undo al devolver en el render
+el valor de speed que lo toma del calculo matematico de fall_velocity(creo que asincrono :O )
 

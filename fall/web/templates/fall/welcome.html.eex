@@ -1,1 +1,7 @@
-<h1>Test :v</h1>
+<h1>Main calc :v</h1>
+<%= form_for @conn, fall_path(@conn, :faller), [as: :calculation],
+fn f -> %>
+<%= select f, :planemo, @choices %>
+<%= text_input f, :distance %>
+<%= submit "Calculate" %>
+<% end %>

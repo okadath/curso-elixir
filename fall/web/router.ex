@@ -18,6 +18,9 @@ defmodule Fall.Router do
 
     get "/", PageController, :index
     get "/welcome", FallController, :welcome
+    #post "/welcome", FallController, :welcome
+    get "/fall", FallController, :faller
+    post "/fall", FallController, :faller
   end
 
   # Other scopes may use custom stacks.
