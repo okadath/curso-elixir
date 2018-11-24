@@ -1,0 +1,52 @@
+
+
+es como Rails!!!!
+
+instalar siempre!
+mix archive.install https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez
+
+ejecutar sin base de datos
+mix phoenix.new fall --no-brunch --no-ecto
+
+correr desde iex, recarga automaticamente
+cd fall
+iex -S mix phoenix.server
+
+
+pasos para phoenix sin base de datos, todo dentro de /web:
+
+1) crear la ruta en router.ex en metodo scope
+
+ get "/welcome", FallController, :welcome
+
+
+2) crear el controlador en la carpeta /controller
+en un archivo FallController.ex
+
+defmodule Fall.FallController do
+	use Fall.Web, :controller
+	def welcome(conn, params) do
+		render conn, "welcome.html"
+	end
+end
+
+
+3)crear en views su vista fall.ex :
+
+defmodule Fall.FallView do
+	use Fall.Web, :view
+end
+
+4)agregar una carpeta "fall" en templates 
+y crear ahi la pag "welcome.html.eex":
+con el contenido de la plantilla en html
+
+<h1>Test :v</h1>
+
+
+
+
+
+
+
+
